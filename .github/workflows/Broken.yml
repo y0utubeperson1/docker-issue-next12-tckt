@@ -12,7 +12,7 @@ on:
 jobs:
   run-docker-compose:
     runs-on: ubuntu-latest
-     timeout-minutes: 10
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
