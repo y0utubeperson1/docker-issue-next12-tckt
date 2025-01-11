@@ -35,12 +35,18 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
           docker --version
 
-      - name: Output Docker and OS Information
+      - name: Docker Version
         run: |
           echo "Docker Version:"
           docker --version
-          echo "Docker Info:"
+
+      - name: Docker Info
+        run: |
+          echo "Docker Version:"
           docker info
+
+      - name: OS Info
+        run: |
           echo "Operating System Details:"
           uname -a
 
