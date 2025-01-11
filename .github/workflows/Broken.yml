@@ -12,6 +12,7 @@ on:
 jobs:
   run-docker-compose:
     runs-on: ubuntu-latest
+     timeout-minutes: 10
 
     steps:
       - name: Checkout code
@@ -45,20 +46,7 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker compose -f docker-compose.broken.yml up -d
-
-      - name: Wait for 10 seconds
-        run: |
-          sleep 10
-
-      - name: Check if containers are alive
-        run: |
-          RUNNING_CONTAINERS=$(docker ps -q)
-          if [ -z "$RUNNING_CONTAINERS" ]; then
-            echo "No running containers found. Failing the job."
-            exit 1
-          fi
-          echo "Containers are still running."
+          docker compose -f docker-compose.broken.yml up
 
       - name: Output Container Logs
         run: |

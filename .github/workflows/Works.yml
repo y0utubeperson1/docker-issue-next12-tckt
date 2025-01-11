@@ -11,10 +11,11 @@ on:
 jobs:
   run-docker-compose:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install the latest Docker
         run: |
@@ -57,8 +58,10 @@ jobs:
             echo "No running containers found. Failing the job."
             exit 1
           fi
-          docker exec -it $CONTAINER_ID npm install
-          docker exec -it $CONTAINER_ID npm run dev
+          echo "Running npm install..."
+          docker exec $CONTAINER_ID npm install
+          echo "Running npm run dev..."
+          docker exec $CONTAINER_ID npm run dev
 
       - name: Wait for 10 seconds
         run: |
