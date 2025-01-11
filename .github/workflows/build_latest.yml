@@ -33,6 +33,16 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
           docker --version
 
+      - name: Output Docker and OS Information
+        run: |
+          echo "Step 2: Outputting Docker and OS Information..."
+          echo "Docker Version:"
+          docker --version
+          echo "Docker Info:"
+          docker info
+          echo "Operating System Details:"
+          uname -a
+
       - name: Run Docker Compose
         run: |
           docker compose up -d
