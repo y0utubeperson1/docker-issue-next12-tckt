@@ -53,13 +53,3 @@ jobs:
       - name: Run Docker Compose
         run: |
           docker compose -f docker-compose.broken.yml up
-
-      - name: Output Container Logs
-        run: |
-          echo "Outputting container logs..."
-          docker logs $(docker ps -q) || echo "No logs to output."
-
-      - name: Tear down Docker Compose
-        if: always()
-        run: |
-          docker compose down

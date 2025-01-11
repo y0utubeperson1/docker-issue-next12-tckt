@@ -70,9 +70,3 @@ jobs:
             echo "npm run dev timed out after 30 seconds, but continuing..."
             true
           }
-
-
-      - name: Tear down Docker Compose
-        if: always()
-        run: |
-          docker compose down
