@@ -17,7 +17,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run dev || tail -f /dev/null"]
+CMD ["npm", "run", "dev"]
 
 # Production stage
 FROM base AS production
