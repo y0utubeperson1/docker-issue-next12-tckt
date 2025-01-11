@@ -1,0 +1,78 @@
+name: Works
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-docker-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install the latest Docker
+        run: |
+          echo "Step 1: Installing the latest Docker..."
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+      - name: Output Docker and OS Information
+        run: |
+          echo "Docker Version:"
+          docker --version
+          echo "Docker Info:"
+          docker info
+          echo "Operating System Details:"
+          uname -a
+
+      - name: Run Docker Compose
+        run: |
+          docker compose -f docker-compose.works.yml up -d
+
+      - name: Wait for 10 seconds
+        run: |
+          sleep 10
+
+      - name: Execute npm commands in container
+        run: |
+          CONTAINER_ID=$(docker ps -q)
+          if [ -z "$CONTAINER_ID" ]; then
+            echo "No running containers found. Failing the job."
+            exit 1
+          fi
+          docker exec -it $CONTAINER_ID npm install
+          docker exec -it $CONTAINER_ID npm run dev
+
+      - name: Wait for 10 seconds
+        run: |
+          sleep 10
+
+      - name: Check if containers are alive
+        run: |
+          RUNNING_CONTAINERS=$(docker ps -q)
+          if [ -z "$RUNNING_CONTAINERS" ]; then
+            echo "No running containers found. Failing the job."
+            exit 1
+          fi
+          echo "Containers are still running."
+
+      - name: Output Container Logs
+        run: |
+          docker logs $(docker ps -q) || echo "No logs to output."
+
+      - name: Tear down Docker Compose
+        if: always()
+        run: |
+          docker compose down

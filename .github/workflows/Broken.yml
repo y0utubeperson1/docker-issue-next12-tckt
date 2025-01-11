@@ -1,4 +1,4 @@
-name: Docker Compose Health Check
+name: Broken
 
 on:
   push:
@@ -35,7 +35,6 @@ jobs:
 
       - name: Output Docker and OS Information
         run: |
-          echo "Step 2: Outputting Docker and OS Information..."
           echo "Docker Version:"
           docker --version
           echo "Docker Info:"
@@ -45,11 +44,10 @@ jobs:
 
       - name: Run Docker Compose
         run: |
-          docker compose up -d
+          docker compose -f docker-compose.broken.yml up -d
 
       - name: Wait for 10 seconds
         run: |
-          echo "Waiting for 10 seconds to check container status..."
           sleep 10
 
       - name: Check if containers are alive

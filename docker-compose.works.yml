@@ -5,6 +5,7 @@ services:
     build:
       context: ./my_app
       target: development
+      dockerfile: Dockerfile.works
     container_name: my_app
     volumes:
       - type: bind
