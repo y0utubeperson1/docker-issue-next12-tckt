@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - gh_action
+      - added_difference
   workflow_dispatch:
 
 

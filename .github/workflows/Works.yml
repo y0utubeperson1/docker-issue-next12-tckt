@@ -1,6 +1,11 @@
 name: Works
 
 on:
+  push:
+    branches:
+      - main
+      - gh_action
+      - added_difference
   workflow_dispatch:
 
 jobs:
