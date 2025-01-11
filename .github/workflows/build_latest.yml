@@ -1,0 +1,62 @@
+name: Docker Compose Health Check
+
+on:
+  push:
+    branches:
+      - main
+      - gh_action
+  workflow_dispatch:
+
+
+jobs:
+  run-docker-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install the latest Docker
+        run: |
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          sudo apt-get update
+          sudo apt-get install -y \
+            ca-certificates \
+            curl \
+            gnupg \
+            lsb-release
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          docker --version
+
+      - name: Run Docker Compose
+        run: |
+          docker compose up -d
+
+      - name: Wait for 10 seconds
+        run: |
+          echo "Waiting for 10 seconds to check container status..."
+          sleep 10
+
+      - name: Check if containers are alive
+        run: |
+          RUNNING_CONTAINERS=$(docker ps -q)
+          if [ -z "$RUNNING_CONTAINERS" ]; then
+            echo "No running containers found. Failing the job."
+            exit 1
+          fi
+          echo "Containers are still running."
+
+      - name: Output Container Logs
+        run: |
+          echo "Outputting container logs..."
+          docker logs $(docker ps -q) || echo "No logs to output."
+
+      - name: Tear down Docker Compose
+        if: always()
+        run: |
+          docker compose down
