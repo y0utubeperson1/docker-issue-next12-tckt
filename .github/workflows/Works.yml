@@ -1,4 +1,4 @@
-name: Works
+name: Latest Docker (Ubuntu) - Works
 
 on:
   push:
