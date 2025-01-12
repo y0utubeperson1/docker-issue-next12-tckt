@@ -19,7 +19,6 @@ jobs:
 
       - name: Install the latest Docker
         run: |
-          echo "Step 1: Installing the latest Docker..."
           sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
           sudo apt-get update
           sudo apt-get install -y \
@@ -59,7 +58,6 @@ jobs:
 
       - name: Execute npm commands in container
         run: |
-          echo "Step 5: Executing npm install and npm run dev in the container..."
           CONTAINER_ID=$(docker ps -q)
           if [ -z "$CONTAINER_ID" ]; then
             echo "No running containers found. Failing the job."

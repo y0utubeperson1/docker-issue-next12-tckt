@@ -19,7 +19,6 @@ jobs:
 
       - name: Install specific version of Docker
         run: |
-          echo "Step 1: Installing specific versions of Docker and its components..."
           sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
           sudo apt-get update
           sudo apt-get install -y \
@@ -40,8 +39,8 @@ jobs:
 
           # Install specific versions
           sudo apt-get install -y \
-            docker-ce=5:27.3.1 \
-            docker-ce-cli=5:27.3.1 \
+            docker-ce=27.3.1 \
+            docker-ce-cli=27.3.1 \
             containerd.io \
             docker-compose-plugin
 
