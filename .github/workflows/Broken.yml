@@ -37,17 +37,22 @@ jobs:
 
       - name: Docker Version
         run: |
-          echo "Docker Version:"
           docker --version
 
       - name: Docker Info
         run: |
-          echo "Docker Version:"
           docker info
+
+      - name: Docker Compose Version
+        run: |
+          docker compose --version
+
+      - name: containerd Version
+        run: |
+          containerd --version
 
       - name: OS Info
         run: |
-          echo "Operating System Details:"
           uname -a
 
       - name: Run Docker Compose
