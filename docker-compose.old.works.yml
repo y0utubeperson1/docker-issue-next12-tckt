@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  react:
+    build:
+      context: ./my_app
+      target: development
+      dockerfile: Dockerfile.works
+    container_name: my_app
+    volumes:
+      - type: bind
+        source: ./react/node_modules
+        target: /app/node_modules:delegated
+      - type: bind
+        source: ./react/.next
+        target: /app/.next:delegated
+      - type: bind
+        source: ./react/src
+        target: /app/src
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./my_app/.my_app
