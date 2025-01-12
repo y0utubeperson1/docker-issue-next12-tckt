@@ -17,39 +17,46 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install specific version of Docker
+      - name: Install specific versions of Docker
         run: |
+
+          # Remove any existing Docker installation
           sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
           sudo apt-get update
+
+          # Install prerequisites
           sudo apt-get install -y \
             ca-certificates \
             curl \
             gnupg \
             lsb-release
 
-          # Add Docker's official GPG key
+          # Add Docker's GPG key
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-          # Set up the Docker repository
-          echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          # Download specific versions of Docker packages
+          wget https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/amd64/containerd.io_1.7.21-1_amd64.deb
+          wget https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/amd64/docker-ce-cli_27.3.1-1~ubuntu.24.04~noble_amd64.deb
+          wget https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/amd64/docker-ce_27.3.1-1~ubuntu.24.04~noble_amd64.deb
+          wget https://download.docker.com/linux/ubuntu/dists/noble/pool/stable/amd64/docker-compose-plugin_2.29.7-1~ubuntu.24.04~noble_amd64.deb
 
-          sudo apt-get update
+          # Install downloaded packages
+          sudo dpkg -i containerd.io_1.7.21-1_amd64.deb
+          sudo dpkg -i docker-ce-cli_27.3.1-1~ubuntu.24.04~noble_amd64.deb
+          sudo dpkg -i docker-ce_27.3.1-1~ubuntu.24.04~noble_amd64.deb
+          sudo dpkg -i docker-compose-plugin_2.29.7-1~ubuntu.24.04~noble_amd64.deb
 
-          # Install specific versions
-          sudo apt-get install -y \
-            docker-ce=27.3.1 \
-            docker-ce-cli=27.3.1 \
-            containerd.io \
-            docker-compose-plugin
+          # Clean up downloaded .deb files
+          rm containerd.io_1.7.21-1_amd64.deb \
+            docker-ce-cli_27.3.1-1~ubuntu.24.04~noble_amd64.deb \
+            docker-ce_27.3.1-1~ubuntu.24.04~noble_amd64.deb \
+            docker-compose-plugin_2.29.7-1~ubuntu.24.04~noble_amd64.deb
 
-          # Verify versions
-          echo "Installed Docker Versions:"
+          # Verify installed versions
+          echo "Installed Docker Components:"
           docker --version
           docker-compose --version
           containerd --version
-
 
       - name: Docker Version
         run: |
