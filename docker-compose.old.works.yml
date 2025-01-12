@@ -9,13 +9,13 @@ services:
     container_name: my_app
     volumes:
       - type: bind
-        source: ./react/node_modules
+        source: ./my_app/node_modules
         target: /app/node_modules:delegated
       - type: bind
-        source: ./react/.next
+        source: ./my_app/.next
         target: /app/.next:delegated
       - type: bind
-        source: ./react/src
+        source: ./my_app/src
         target: /app/src
     environment:
       - NODE_ENV=development
